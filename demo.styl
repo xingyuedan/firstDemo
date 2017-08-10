@@ -1,0 +1,398 @@
+body, html
+    margin: 0
+    padding: 0
+
+// 花括号可选
+body 
+    font: 12px Helvetica, Arial, sans-serif;
+
+a.button
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+// 分号可选
+body 
+    font: 12px Helvetica, Arial, sans-serif
+
+a.button
+    -webkit-border-radius: 5px
+    -moz-border-radius: 5px
+    border-radius: 5px
+
+// 冒号可选
+body 
+    font 12px Helvetica, Arial, sans-serif
+
+a.button
+    -webkit-border-radius 5px
+    -moz-border-radius 5px
+    border-radius 5px
+
+// 干货 逗号可选
+border-radius()
+    -webkit-border-radius arguments
+    -moz-border-radius arguments
+    border-radius arguments
+
+body
+    font 12px Helvetica, Arial, sans-serif
+
+a.button
+    border-radius(5px)
+
+// 或者
+a.button
+    border-radius 5px
+
+// 创建与分享
+@import 'vendor'
+
+body
+    font 12px Helvetica, Arial, sans-serif
+a.button
+    border-radius 5px
+
+// 语言函数
+sum(nums...)
+    sum = 0
+    sum += n for n in nums
+
+sum(1 2 3 4)
+// => 10
+
+// 所有的都是可选的
+fonts = Helvetica, Arial, sans-serif
+
+body 
+    padding 50px
+    font 14px/1.4 fonts
+
+// 缩排
+body
+    color: white
+
+textarea, input
+    border: 1px solid #eee
+
+// 属性选择器
+foo bar baz > input
+    border: 1px solid
+
+foo bar baz, form input, > a
+    border 1px solid
+
+// 父级引用
+textarea, input
+    color: #a7a7a7
+    &:hover
+    color #000
+
+box-shadow()
+    -webkit-box-shadow arguments
+    -moz-box-shadow arguments
+    box-shadow arguments
+    html.ie8 &,
+    html.ie7 &,
+    html.ie6 &
+        border 2px solid arguments[length(arguments)-1]
+
+body 
+    #login
+        box-shadow 1px 1px 3px #eee;
+
+pad(n)
+    padding (-n)
+
+body 
+    pad(5px)
+
+body
+    padding -5px
+
+// styuls无法处理的属性值 unquote()可以
+filter
+unquote('progid:DXImageTransform.Microsoft.BasicImage(rotation=1)')
+
+// 变量
+font-size = 14px
+
+body
+    font font-size Arial, sans-seri
+
+font-size = 14px
+font = font-size "Lucida Grande", Arial
+
+body
+    font font sans-serif
+
+// 标识符（变量名，函数等），也可能包括$字符。
+$font-size = 14px
+body 
+    font $font-size sans-serif;
+
+#logo
+    position: absolute
+    top: 50%
+    left: 50%
+    width: w = 150px
+    height: h = 80px
+    margin-left: -(w / 2)
+    margin-right: -(h / 2)
+
+//或者
+#logo
+    position: absolute
+    top: 50%
+    left: 50%
+    width: 150px
+    height: 80px
+    margin-left: -(@width / 2)
+    margin-right: -(@height / 2)
+
+position()
+    position: arguments
+    z-index: 1 unless @z-index
+
+#logo
+    z-index: 20
+    position: absolute
+
+#logo2
+    position: absolute
+
+body
+    color: red
+    ul
+        li
+            color: blue
+            a
+                background-color: @color  //blue
+
+// 插值
+vendor(prop, args)
+    -webkit-{prop} args
+    -moz-{prop} args
+    {prop} args 
+
+border-radius()
+    vendor('border-radius', arguments)
+
+box-shadow()
+    vendor('box-shadow', arguments)
+
+button
+    border-radius: 1px 2px / 3px 4px
+
+// 选择器插值
+table 
+    for row in 1 2 3 4 5
+        tr:nth-child({row})
+            height: 10px * row
+
+body 
+    n = 5
+    foo: (n)em
+    foo: (n)%
+    foo: (n + 5)%
+    foo: (n * 5)px
+    foo: unit(n + 5, '%')
+    foo: unit(5 + 180 / 2, deg)
+
+// 格式化字符串
+'X:Microsoft::Crap(%s)' % #fc0
+// => X::Microsoft::Crap(#fc0)
+
+'-webkit-gradient(%s, %s, %s)' % (linear (0 0) (0 100%))
+//=> -webkit-gradient(linear, 0 0, 0 100%)
+
+//特定私有前缀-- 例如IE浏览器透明度
+support-for-ie ?= true
+
+opacity(n)
+    opacity n
+    if support-for-ie
+        filter unquote('progid::DXImageTransform.Microsoft.Alpha(Opacity=' + round(n * 100) + ')')
+
+#logo
+    &:hover
+        opacity 0.5
+
+stripe(even = #fff, odd = #eee)
+    tr
+        background-color odd
+        &.even
+        &:nth-child(even)
+            background-color even
+
+table
+    stripe()
+    td
+        padding 4px 10px
+
+table#users
+    stripe(#303030, #494848)
+    td
+        color white
+
+// 混合书写中的混合书写
+inline-list()
+    li
+        display inline
+
+comma-list()
+    inline-list()
+    li
+        &:after
+            content ', '
+        &:last-child:after
+            content ''
+ul
+    comma-list()
+
+// 哈希示例
+get(hash, key)
+    return pair[1] if pair[0] == key for pair in hash
+hash = (one 1)(two 2)(three 3)
+get(hash, two)
+get(hash, three)
+get(hash, something)
+
+// 关键字参数
+body
+    color: rgba(255, 200, 100, 0.5)
+    color rgba(red: 255, green: 200, blue: 100, alpha: 0.5)
+    color rgba(alpha: 0.5, blue: 100, red:255, 200)
+    color rgba(alpha: 0.5, blue: 100, 255, 200)
+
+nums = 1 2
+push(nums, 3, 4, 5) //别名为append()
+
+nums //=>1 2 3 4 5
+
+nums = 4 5
+unshift(nums, 3, 2, 1)  //别名为prepend()
+nums //=>1 2 3 4 5
+
+pairs = (one 1)(two 2)(three 3)
+keys(pairs)
+//=> one two three
+values(pairs)
+//=>1 2 3
+
+type(12) // => 'unit'
+typeof(12) // => 'unit'
+typeof(#fff) //=> 'rgba'
+type-of(#fff) //=> 'rgba'
+
+unit(10) //=> ''
+unit(15in) //=> 'in'
+unit(15%, 'px') //=> 15px
+unit(15%, px) //=> 15px
+
+match('^foo(bar)?', foo)
+match('^foo(bar)?', foobar)
+//=> true
+
+match('^foo(bar)?', 'foo')
+match('^foo(bar)?', 'foobar')
+//=> true
+
+match('^foo(bar)?', 'bar')
+//=> false
+
+abs(-5px)
+//=> 5px
+
+ceil(5.6in) //=> 6in
+floor(5.6px) //=> 5px
+round(5.5px) //=>6px
+round(5.4px) //=>5px
+
+min(1, 5) //=>1
+max(1, 5) //=>5
+
+even(6px) //=>true 是否为偶数
+odd(5mm) //=> true
+
+sum(1 2 3) //=>6
+avg(1 2 3) //=>2
+
+join(' ', 1 2 3)
+join(',', 1 2 3)]
+
+op = "+"
+operate(op, 15, 5)
+
+length((1 2 3 4))
+
+warn("oh noes!")    //警告 并不退出
+
+add(a, b)
+    unless a is a 'unit' and b is a "unit"
+        error('add() expects units')    //错误并退出
+    a + b
+
+nums = 1 2 3
+last(nums)
+last(1 2 3)
+//=> 3
+
+list = (one 1)(two 2)(three 3)
+last(list)
+//=> (three 3)
+
+opposite-position(right)
+//=> left
+
+opposite-position(top left)
+//=> bottom right
+
+opposite-position('top' 'left')
+//=> bottom right
+
+width(img)
+    return image-size(img)[0]
+
+height(img)
+    return image-size(img)[1]
+
+image-size('tux.png')
+// => 405px 250px
+
+image-size("tux.png")[0] == width("tux.png")
+//=> true
+
+something()
+    add-property('bar', 1 2 3)
+    s('bar')
+
+body
+    foo: something()
+
+box-shadow(offset-x, args...)
+    got-offset-x offset-x
+    -webkit-box-shadow offset-x args
+    -moz-box-shadow offset-x args
+    box-shadow offset-x args
+
+#login
+    box-shadow 1px 2px 5px #eee
+
+negative(n)
+    unless n is a 'unit'
+        error('无效数值')
+    if n < 0
+        yes
+    else
+        no
+
+body
+    fonts = Impact Arial sans-serif
+    for font, i in fonts
+        foo i font
+
+body
+    foo 0 Impact
+    foo 1 Arial
+    foo 2 sans-serif

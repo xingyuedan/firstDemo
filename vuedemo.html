@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <div id="app">
+        {{ message }}
+    </div>
+
+    <div id="app-2">
+        <span v-bind:title="message">
+                鼠标悬停几秒钟查看此处动态绑定的提示信息！
+            </span>
+    </div>
+
+    <div id="app-3">
+        <p v-if="seen">现在你看见我了</p>
+    </div>
+
+    <div id="app-4">
+        <ol>
+            <li v-for="todo in todos">
+                {{ todo.text }}
+            </li>
+        </ol>
+    </div>
+
+    <div id="app-5">
+        <p>{{ message }}</p>
+        <button v-on:click="reverseMessage">逆转消息</button>
+    </div>
+
+    <div id="app-6">
+        <p>{{ message }}</p>
+        <input v-model="message">
+    </div>
+
+    <div id="app-7">
+        <ol>
+            <todo-item v-for="item in groceryList" v-bind:todo="item" v-bind:key="item.id"></todo-item>
+        </ol>
+    </div>
+
+    <div id="watch-example">
+        <p>
+            Ask a yes/no question:
+            <input v-model="question">
+        </p>
+        <p>{{ answer }}</p>
+    </div>
+
+    <div id="example-2">
+        <simple-counter></simple-counter>
+        <simple-counter></simple-counter>
+        <simple-counter></simple-counter>
+    </div>
+
+    <div id="counter-event-example">
+        <p>{{ total }}</p>
+        <button-counter v-on:increment="incrementTotal"></button-counter>
+        <button-counter v-on:increment="incrementTotal"></button-counter>
+    </div>
+
+    <!-- <router-link :to="item.path" :exact="true" :aria-expanded="isExpanded(item) ? 'true' : 'false'"
+                     v-if="item.path" @click.native="toggle(index, item)"> -->
+    <!-- <input v-model="someting">
+    <input v-bind:value="something" v-on:input="something=$event.target.value"> -->
+    <!-- <currency-input v-model="price"></currency-input> -->
+
+    <div id="appCurrency">
+        <currency-input label="Price" v-model="price"></currency-input>
+        <currency-input label="Shipping" v-model="shipping"></currency-input>
+        <currency-input label="Handling" v-model="handling"></currency-input>
+        <currency-input label="Discount" v-model="discount"></currency-input>
+
+        <p>Total: ${{ total }}</p>
+    </div>
+
+    <div id="demo1">
+        <button v-on:click="show = !show">Toggle</button>
+        <transition name="fade">
+            <p v-if="show">Hello</p>
+        </transition>
+    </div>
+
+    <style>
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity .5s
+        }
+        
+        .fade-enter,
+        .fade-leave-to
+        /* .fade-leave-active in below version 2.1.8 */
+        
+        {
+            opacity: 0
+        }
+        
+        .slide-fade-enter-active {
+            transition: all .3s ease;
+        }
+        
+        .slide-fade-leave-active {
+            transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+        }
+        
+        .slide-fade-enter,
+        .slide-fade-leave-to {
+            transform: translateX(10px);
+            opacity: 0;
+        }
+        
+        .bounce-enter-active {
+            animation: bounce-in .5s;
+        }
+        
+        .bounce-leave-active {
+            animation: bounce-in .5s reverse;
+        }
+        
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</body>
+
+<script src="https://unpkg.com/vue"></script>
+<script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+<!-- <script src="https://cdn.rawgit.com/chrisvfritz/5f0a639590d6e648933416f90ba7ae4e/raw/974aa47f8f9c5361c5233bd56be37db8ed765a09/currency-validator.js"></script> -->
+<script>
+    var app = new Vue({
+        el: "#app",
+        data: {
+            message: "Hello Vue!"
+        }
+    })
+
+    var app2 = new Vue({
+        el: "#app-2",
+        data: {
+            message: '页面加载于 ' + new Date()
+        }
+    })
+
+    var app3 = new Vue({
+        el: "#app-3",
+        data: {
+            seen: true
+        }
+    })
+
+    var app4 = new Vue({
+        el: "#app-4",
+        data: {
+            todos: [{
+                text: '学习 JavaScript'
+            }, {
+                text: '学习 Vue'
+            }, {
+                text: '整个牛项目'
+            }]
+        }
+    })
+
+    var app5 = new Vue({
+        el: "#app-5",
+        data: {
+            message: "Hello Vue.js!"
+        },
+        methods: {
+            reverseMessage: function() {
+                this.message = this.message.split('').reverse().join('')
+            }
+        }
+    })
+
+    var app6 = new Vue({
+        el: "#app-6",
+        data: {
+            message: "Hello Vue!"
+        }
+    })
+
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '<li>{{ todo.text }}</li>'
+    })
+
+    var app7 = new Vue({
+        el: "#app-7",
+        data: {
+            groceryList: [{
+                id: 0,
+                text: '蔬菜'
+            }, {
+                id: 1,
+                text: '奶酪'
+            }, {
+                id: 2,
+                text: '随便其他什么人吃的东西'
+            }]
+        }
+    })
+
+    var watchExampleVM = new Vue({
+        el: "#watch-example",
+        data: {
+            question: '',
+            answer: 'I cannot give you an answer until you ask a question!'
+        },
+        watch: {
+            question: function(newQuestion) {
+                this.answer = "Waiting for you to stop typing..."
+                this.getAnswer()
+            }
+        },
+        methods: {
+            getAnswer: _.debounce(
+                function() {
+                    if (this.question.indexOf('?') === -1) {
+                        this.answer = 'Questions usually contain a question mark. ;-)'
+                        return
+                    }
+                    this.answer = 'Thinking...'
+                    var vm = this
+                    axios.get("https://yesno.wtf/api")
+                        .then(function(response) {
+                            vm.answer = _.capitalize(response.data.answer)
+                        })
+                        .catch(function(error) {
+                            vm.answer = 'Error! Could not reach the API. ' + error
+                        })
+                },
+                500
+            )
+        }
+    })
+
+    Vue.component('simple-counter', {
+        template: '<button v-on:click="counter+=1">{{ counter }}</button>',
+        data: function() {
+            return {
+                counter: 0
+            }
+        }
+    })
+
+    var example2 = new Vue({
+        el: '#example-2'
+    })
+
+    Vue.component('button-counter', {
+        template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+        data: function() {
+            return {
+                counter: 0
+            }
+        },
+        methods: {
+            incrementCounter: function() {
+                this.counter += 1
+                this.$emit('increment') //触发事件
+            }
+        }
+    })
+
+    new Vue({
+        el: "#counter-event-example",
+        data: {
+            total: 0
+        },
+        methods: {
+            incrementTotal: function() {
+                this.total += 1;
+            }
+        }
+    })
+
+    Vue.component("currency-input", {
+        template: '<div>\
+        <label v-if="label">{{ label }}</label>\
+        <input ref="input" v-bind:value="value" v-on:input="updateValue($event.target.value)" \
+            v-on:focus="selectAll" v-on:blur="formatValue">\
+        </div>',
+        props: {
+            value: {
+                type: Number,
+                default: 0
+            },
+            label: {
+                type: String,
+                default: ''
+            }
+        },
+        mounted: function() {
+            this.formatValue()
+        },
+        methods: {
+            updateValue: function(value) {
+                var result = currencyValidator.parse(value, this.value)
+                if (result.warning) {
+                    this.$refs.input.value = result.value
+                }
+                this.$emit('input', result.value)
+            },
+            formatValue: function() {
+                this.$refs.input.value = currencyValidator.format(this.value)
+            },
+            selectAll: function(event) {
+                setTimeout(function() {
+                    event.target.select()
+                }, 0)
+            }
+        }
+    })
+
+    new Vue({
+        el: "#appCurrency",
+        data: {
+            price: 0,
+            shipping: 0,
+            handling: 0,
+            discount: 0
+        },
+        computed: {
+            total: function() {
+                return ((
+                    this.price * 100 +
+                    this.shipping * 100 +
+                    this.handling * 100 -
+                    this.discount * 100
+                ) / 100).toFixed(2)
+            }
+        }
+    })
+
+    Vue.component('example', {
+        template: "<span>{{ message }}</span>",
+        data: function() {
+            return {
+                message: "没有更新"
+            }
+        },
+        methods: {
+            updateMessage: function() {
+                this.message = "更新完成"
+                console.log(this.$el.textContent)
+                this.$nextTick(function() {
+                    console.log(this.$el.textContent)
+                })
+            }
+        }
+    })
+
+    new Vue({
+        el: "#demo1",
+        data: {
+            show: true
+        }
+    })
+</script>
+
+</html>
